@@ -9,7 +9,7 @@ const router = express.Router();
 //登入
 router.get('/login', (req, res) => {
     res.locals.pageName = 'login';
-    res.json({});
+    res.render('login');
 });
 router.post('/login', async (req, res) => {
     res.json({});

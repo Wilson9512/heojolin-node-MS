@@ -1,0 +1,89 @@
+<%- include('parts/html-head') %>
+<%- include('parts/navbar') %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 mt-lg-3 pt-3" style="margin: auto">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">會員登入</h5>
+
+                    <form name="form1" onsubmit="checkForm(); return false;">
+
+                        <div class="mb-3">
+                            <label for="user_account" class="form-label">email (作為帳號使用)</label>
+                            <input type="email" class="form-control" id="user_account" name="user_account" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="user_pass" class="form-label">密碼</label>
+                            <input type="password" class="form-control" id="user_pass" name="user_pass" required>
+                        </div>
+
+
+                        <button type="submit" class="btn btn-primary">註冊</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('parts/script') %>
+<script>
+
+    const account = document.querySelector('#user_account');
+
+    const keyHandler = event => {
+        console.log(event.type, event.key);
+        //TODO:檢查格式是否符合email格式
+
+
+        const usp = new URLSearchParams();
+        usp.set('account', account.value.toLowerCase().trim());
+
+        fetch('/account-check?' + usp).then(r => r.json).then( data => {
+            if (data.used) {
+                //email已被使用
+                account.style.border = '2px solid red';
+            } else {
+                account.style.border = '1px solid #CCCCCC';
+            }
+        });
+    };
+
+    //account.addEventListener('keypress', keyHandler);
+    //account.addEventListener('keydown', keyHandler)
+    //account.addEventListener('keyup', keyHandler)
+    account.addEventListener('input', keyHandler)
+
+    function checkForm() {
+        //資料檢查
+
+        const formData = new FormData(document.form1);
+        const usp = new URLSearchParams(formData);
+        const dataObj = {};
+        for (let i of formData) {
+            dataObj[i[0]] = i[1];
+        }
+        //TODO:檢查資料格式
+
+        fetch('', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: usp.toString(),
+        }).then(r => r.json())
+            .then(obj => {
+                console.log(JSON.stringify(obj, null, 4));
+                if (obj.success) {
+                    alert('登入成功');
+                    location.href = '/login';
+                } else {
+                    alert('登入失敗\n' + (obj.error || ''));
+                }
+            });
+    }
+
+</script>
+<%- include('parts/html-foot') %>
