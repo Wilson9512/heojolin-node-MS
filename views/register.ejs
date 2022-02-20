@@ -9,30 +9,31 @@
                     <h5 class="card-title">會員註冊</h5>
 
                     <form name="form1" onsubmit="checkForm(); return false;">
+
                         <div class="mb-3">
-                            <label for="email" class="form-label">email (作為帳號使用)</label>
+                            <label for="user_account" class="form-label">email (作為帳號使用)</label>
                             <input type="email" class="form-control" id="user_account" name="user_account" required>
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">密碼</label>
+                            <label for="user_pass" class="form-label">密碼</label>
                             <input type="password" class="form-control" id="user_pass" name="user_pass" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="member_name" class="form-label">姓名</label>
-                            <input type="text" class="form-control" id="member_name" name="member_name">
-                        </div>
-                        <div class="mb-3">
-                            <label for="member_bir" class="form-label">生日</label>
-                            <input type="text" class="form-control" id="member_bir" name="member_bir">
-                        </div>
-                        <div class="mb-3">
-                            <label for="member_mob" class="form-label">手機號碼</label>
-                            <input type="text" class="form-control" id="member_mob" name="member_mob">
-                        </div>
-                        <div class="mb-3">
-                            <label for="member_addr" class="form-label">地址</label>
-                            <input type="text" class="form-control" id="member_addr" name="member_addr">
-                        </div>
+<!--                        <div class="mb-3">-->
+<!--                            <label for="member_name" class="form-label">姓名</label>-->
+<!--                            <input type="text" class="form-control" id="name" name="member_name">-->
+<!--                        </div>-->
+<!--                        <div class="mb-3">-->
+<!--                            <label for="member_bir" class="form-label">生日</label>-->
+<!--                            <input type="text" class="form-control" id="bir" name="member_bir">-->
+<!--                        </div>-->
+<!--                        <div class="mb-3">-->
+<!--                            <label for="member_mob" class="form-label">手機號碼</label>-->
+<!--                            <input type="text" class="form-control" id="mob" name="member_mob">-->
+<!--                        </div>-->
+<!--                        <div class="mb-3">-->
+<!--                            <label for="member_addr" class="form-label">地址</label>-->
+<!--                            <input type="text" class="form-control" id="address" name="member_addr">-->
+<!--                        </div>-->
 
                         <button type="submit" class="btn btn-primary">註冊</button>
                     </form>
@@ -48,15 +49,12 @@
     function checkForm() {
         //資料檢查
 
-        const fd = new FormData(document.form1);
-        // console.log([...fd]);
-        const usp = new URLSearchParams(fd);
-        // const dataObj = {};
-        // for (let i of fd) {
-        //     dataObj[i[0]] = i[1];
-        // }
-        // console.log({dataObj});
-
+        const formData = new FormData(document.form1);
+        const usp = new URLSearchParams(formData);
+        const dataObj = {};
+        for (let i of formData) {
+            dataObj[i[0]] = i[1];
+        }
         //TODO:檢查資料格式
 
         fetch('', {
@@ -65,17 +63,17 @@
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             body: usp.toString(),
-        }).then(r=>r.json()).then(obj=>{
+        }).then(r => r.json())
+            .then(obj => {
             console.log(JSON.stringify(obj, null, 4));
-            if(obj.success){
+            if (obj.success) {
                 alert('註冊成功');
-            }else {
-                alert('註冊失敗\n' + obj.error || '');
+                location.href ='/login';
+            } else {
+                alert('註冊失敗\n' + (obj.error || ''));
             }
-        })
+        });
     }
-
-
 
 </script>
 <%- include('parts/html-foot') %>
