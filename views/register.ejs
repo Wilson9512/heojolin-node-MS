@@ -18,22 +18,22 @@
                             <label for="user_pass" class="form-label">密碼</label>
                             <input type="password" class="form-control" id="user_pass" name="user_pass" required>
                         </div>
-<!--                        <div class="mb-3">-->
-<!--                            <label for="member_name" class="form-label">姓名</label>-->
-<!--                            <input type="text" class="form-control" id="name" name="member_name">-->
-<!--                        </div>-->
-<!--                        <div class="mb-3">-->
-<!--                            <label for="member_bir" class="form-label">生日</label>-->
-<!--                            <input type="text" class="form-control" id="bir" name="member_bir">-->
-<!--                        </div>-->
-<!--                        <div class="mb-3">-->
-<!--                            <label for="member_mob" class="form-label">手機號碼</label>-->
-<!--                            <input type="text" class="form-control" id="mob" name="member_mob">-->
-<!--                        </div>-->
-<!--                        <div class="mb-3">-->
-<!--                            <label for="member_addr" class="form-label">地址</label>-->
-<!--                            <input type="text" class="form-control" id="address" name="member_addr">-->
-<!--                        </div>-->
+                        <!--                        <div class="mb-3">-->
+                        <!--                            <label for="member_name" class="form-label">姓名</label>-->
+                        <!--                            <input type="text" class="form-control" id="name" name="member_name">-->
+                        <!--                        </div>-->
+                        <!--                        <div class="mb-3">-->
+                        <!--                            <label for="member_bir" class="form-label">生日</label>-->
+                        <!--                            <input type="text" class="form-control" id="bir" name="member_bir">-->
+                        <!--                        </div>-->
+                        <!--                        <div class="mb-3">-->
+                        <!--                            <label for="member_mob" class="form-label">手機號碼</label>-->
+                        <!--                            <input type="text" class="form-control" id="mob" name="member_mob">-->
+                        <!--                        </div>-->
+                        <!--                        <div class="mb-3">-->
+                        <!--                            <label for="member_addr" class="form-label">地址</label>-->
+                        <!--                            <input type="text" class="form-control" id="address" name="member_addr">-->
+                        <!--                        </div>-->
 
                         <button type="submit" class="btn btn-primary">註冊</button>
                     </form>
@@ -45,6 +45,31 @@
 
 <%- include('parts/script') %>
 <script>
+
+    const account = document.querySelector('#user_account');
+
+    const keyHandler = event => {
+        console.log(event.type, event.key);
+        //TODO:檢查格式是否符合email格式
+
+
+        const usp = new URLSearchParams();
+        usp.set('account', account.value.toLowerCase().trim());
+
+        fetch('/account-check?' + usp).then(r => r.json).then( data => {
+            if (data.used) {
+                //email已被使用
+                account.style.border = '2px solid red';
+            } else {
+                account.style.border = '1px solid #CCCCCC';
+            }
+        });
+    };
+
+    //account.addEventListener('keypress', keyHandler);
+    //account.addEventListener('keydown', keyHandler)
+    //account.addEventListener('keyup', keyHandler)
+    account.addEventListener('input', keyHandler)
 
     function checkForm() {
         //資料檢查
@@ -65,14 +90,14 @@
             body: usp.toString(),
         }).then(r => r.json())
             .then(obj => {
-            console.log(JSON.stringify(obj, null, 4));
-            if (obj.success) {
-                alert('註冊成功');
-                location.href ='/login';
-            } else {
-                alert('註冊失敗\n' + (obj.error || ''));
-            }
-        });
+                console.log(JSON.stringify(obj, null, 4));
+                if (obj.success) {
+                    alert('註冊成功');
+                    location.href = '/login';
+                } else {
+                    alert('註冊失敗\n' + (obj.error || ''));
+                }
+            });
     }
 
 </script>

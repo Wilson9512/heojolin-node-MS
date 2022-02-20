@@ -32,17 +32,30 @@ router.post('/register', async (req, res) => {
     const sql = "INSERT INTO `user`(`user_account`, `user_pass`, `user_time`) " +
         "VALUES ( ?, ?,NOW());";
 
-    const [result] = await db.query(sql, [
-        req.body.user_account,
-        hash,
-    ]);
-    if (result.affectedRows===1) {
-        output.success = true;
-    } else {
-        output.error = '無法新增會員';
+    let result;
+    try {
+        [result] = await db.query(sql, [
+            req.body.user_account,
+            hash,
+        ]);
+        if (result.affectedRows === 1) {
+            output.success = true;
+        } else {
+            output.error = '無法新增會員';
+        }
+    } catch (ex) {
+        console.log(ex);
+        output.error = 'Email 已被使用過';
     }
-
     res.json(output);
+});
+
+router.get('/account-check', async (req, res) => {
+    const sql = "SELECT `user_account` FROM user WHERE `user_account`=?";
+    const [rs] = await db.query(sql, [req.query.user_account || 'aa']);
+
+    res.json({used: !!rs.length});
+
 });
 //登出
 router.get('/logout', (req, res) => {
