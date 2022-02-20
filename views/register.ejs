@@ -44,41 +44,37 @@
 
 <%- include('parts/script') %>
 <script>
-    // function checkForm() {
-    //     //資料檢查
-    //     const fd = new FormData(document.form1);
-    //     console.log([...fd]);
-    //     const usp = new URLSearchParams(fd);
-    //     const dataObj = {};
-    //     for (let i of fd) {
-    //         dataObj[i[0]] = i[1];
-    //     }
-    //     console.log({dataObj});
-    //     //TODO:檢查資料格式
 
-    //     fetch('', {
-    //         method: 'POST',
-    //         body: JSON.stringify(dataObj),
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         }
-    //     }).then(r => r.json())
-    //         .then(obj => {
-    //             console.log(obj);
-    //         });
-    // }
-    //
-    // const Joi = joi;
-    // const schema = Joi.object({
-    //     username: Joi.string().alphanum().min(6).max(20).required(),
-    //
-    //     age: Joi.number().required(),
-    // });
-    // /*
-    // console.log(schema.validate({username: 'wil', age: 'xyz'}));
-    // console.log(schema.validate({username: 'wil', age: 'xyz'}, {abortEarly: false}));
-    // console.log(schema.validate({username: 'wilsonChen', age: '25'}));
-    //  */
+    function checkForm() {
+        //資料檢查
+
+        const fd = new FormData(document.form1);
+        // console.log([...fd]);
+        const usp = new URLSearchParams(fd);
+        // const dataObj = {};
+        // for (let i of fd) {
+        //     dataObj[i[0]] = i[1];
+        // }
+        // console.log({dataObj});
+
+        //TODO:檢查資料格式
+
+        fetch('', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: usp.toString(),
+        }).then(r=>r.json()).then(obj=>{
+            console.log(JSON.stringify(obj, null, 4));
+            if(obj.success){
+                alert('註冊成功');
+            }else {
+                alert('註冊失敗\n' + obj.error || '');
+            }
+        })
+    }
+
 
 
 </script>
